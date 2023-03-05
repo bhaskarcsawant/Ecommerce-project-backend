@@ -1,77 +1,62 @@
 // const db = require("../models")
 const { ProductModel } = require("../models")
+const catchAsyncError = require('../middleware/catchAsyncError')
 
 
 //to get all products
-exports.gelAllProducts = async (req, res, next) => {
+exports.gelAllProducts = catchAsyncError(async (req, res, next) => {
     // res.status(200).json({ message: "route is working bro" })
     await ProductModel.findAll().then(product => {
         let productData = product
         res.send(productData)
-    }).catch(err => {
-        if (err) {
-            console.log(err)
-        }
     })
-}
+})
 
 
 //to get single product
-exports.getSingleProduct = async (req, res, next) => {
+exports.getSingleProduct = catchAsyncError(async (req, res, next) => {
     const product = await ProductModel.findOne({ where: { id: req.params.id } });
 
     if (!product) {
-        return res.status(500).json({ message: "Product not found" })
+        return res.status(404).json({ message: "Product not found" })
     }
     res.send(product)
 
-}
+})
 
 
 //to create a product
-exports.addProduct = async (req, res, next) => {
-    await ProductModel.create(req.body).catch(err => {
-        if (err) {
-            console.log(err)
-        }
-    })
+exports.addProduct = catchAsyncError(async (req, res, next) => {
+    await ProductModel.create(req.body);
     await res.send("inserted successfully")
-}
+});
 
 
 
 //to update a product
 
-exports.updateProduct = async (req, res, next) => {
+exports.updateProduct = catchAsyncError(async (req, res, next) => {
     const product = await ProductModel.findOne({ where: { id: req.params.id } });
 
     if (!product) {
         return res.status(500).json({ message: "Product not found" })
     }
-    await product.update(req.body).catch(err => {
-        if (err) {
-            console.log(err)
-        }
-    })
+    await product.update(req.body)
     await res.send("updated successfully")
-}
+})
 
 
 //to delete a product
 
-exports.deleteProduct = async (req, res, next) => {
+exports.deleteProduct = catchAsyncError(async (req, res, next) => {
     const product = await ProductModel.findOne({ where: { id: req.params.id } });
 
     if (!product) {
         return res.status(500).json({ message: "Product not found" })
     }
-    await product.destroy().catch(err => {
-        if (err) {
-            console.log(err)
-        }
-    })
+    await product.destroy();
     await res.send("deleted successfully")
-}
+})
 
 
 
