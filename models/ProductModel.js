@@ -1,60 +1,57 @@
-module.exports = (sequelize, DataTypes) => {
-    const ProductModel = sequelize.define('ProductModel', {
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notEmpty: true,
-            },
-        },
-        descreption: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notEmpty: true,
-            },
-        },
-        brand: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notEmpty: true,
-            },
-        },
-        price: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            validate: {
-                notEmpty: true,
-            },
-        },
-        images: {
-            type: DataTypes.STRING,
-            get: function () {
-                return JSON.parse(this.getDataValue('images'));
-            },
-            set: function (val) {
-                return this.setDataValue('images', JSON.stringify(val));
-            }
-        },
-        category: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notEmpty: true,
-            },
-        },
-        stock: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            validate: {
-                notEmpty: true,
-            },
-        },
-    })
+const mongoose = require('mongoose')
 
-    return ProductModel
-}
+
+const productScema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: [true, "Please enter product name"],
+        trim: true,
+    },
+    descreption: {
+        type: String,
+        required: [true, "Please enter product descreption"],
+    },
+    brand: {
+        type: String,
+        required: [true, "Please enter product brand"],
+        trim: true,
+    },
+    category: {
+        type: String,
+        required: [true, "Please enter product category"],
+    },
+    images: [
+        {
+            public_id: {
+                type: String,
+                required: true,
+            },
+            url: {
+                type: String,
+                required: true,
+            },
+
+        },
+    ],
+    price: {
+        type: Number,
+        required: [true, "Please enter product price"],
+        maxLength: [10, "price cannot exceed 10 characters"],
+    },
+    stock: {
+        type: Number,
+        required: [true, "Please enter product stock quantity"],
+        maxLength: [5, "price cannot exceed 5 characters"],
+        default: 1,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now(),
+    }
+})
+
+
+module.exports = mongoose.model('Product', productScema)
 
 
 //product properties json format

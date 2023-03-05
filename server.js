@@ -1,11 +1,11 @@
 // const express = require("express");
 const app = require("./app")
-const db = require("./models")
 const dotenv = require("dotenv")
+const connectDb = require('./config/databse')
 dotenv.config({ path: "./config/config.env" })
 
+//connect db to express
+connectDb()
 
+app.listen(process.env.PORT, () => console.log('server running'))
 
-db.sequelize.sync().then((req) => {
-    app.listen(process.env.PORT, () => console.log('server running'))
-})
