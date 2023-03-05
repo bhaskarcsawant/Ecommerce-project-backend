@@ -1,12 +1,12 @@
-// const db = require("../models")
-const { ProductModel } = require("../models")
+
+const Product = require("../models/ProductModel")
 const catchAsyncError = require('../middleware/catchAsyncError')
+const ApiFeatures = require("../utils/apiFeatures")
 
 
 //to get all products
 exports.gelAllProducts = catchAsyncError(async (req, res, next) => {
-    // res.status(200).json({ message: "route is working bro" })
-    await ProductModel.findAll().then(product => {
+    await Product.find().then(product => {
         let productData = product
         res.send(productData)
     })
@@ -15,10 +15,9 @@ exports.gelAllProducts = catchAsyncError(async (req, res, next) => {
 
 //to get single product
 exports.getSingleProduct = catchAsyncError(async (req, res, next) => {
-    const product = await ProductModel.findOne({ where: { id: req.params.id } });
-
+    const product = await Product.findById(req.params.id);
     if (!product) {
-        return res.status(404).json({ message: "Product not found" })
+        return res.status(500).json({ message: "Product not found" })
     }
     res.send(product)
 
@@ -27,8 +26,8 @@ exports.getSingleProduct = catchAsyncError(async (req, res, next) => {
 
 //to create a product
 exports.addProduct = catchAsyncError(async (req, res, next) => {
-    await ProductModel.create(req.body);
-    await res.send("inserted successfully")
+    await Product.create(req.body);
+    res.send("inserted successfully")
 });
 
 
@@ -36,26 +35,30 @@ exports.addProduct = catchAsyncError(async (req, res, next) => {
 //to update a product
 
 exports.updateProduct = catchAsyncError(async (req, res, next) => {
-    const product = await ProductModel.findOne({ where: { id: req.params.id } });
+    const product = await Product.findById(req.params.id);
 
     if (!product) {
         return res.status(500).json({ message: "Product not found" })
     }
-    await product.update(req.body)
-    await res.send("updated successfully")
+    await Product.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true,
+        useFindAndModify: false
+    })
+    res.send("updated successfully")
 })
 
 
 //to delete a product
 
 exports.deleteProduct = catchAsyncError(async (req, res, next) => {
-    const product = await ProductModel.findOne({ where: { id: req.params.id } });
+    const product = await Product.findById(req.params.id);
 
     if (!product) {
         return res.status(500).json({ message: "Product not found" })
     }
-    await product.destroy();
-    await res.send("deleted successfully")
+    await product.deleteOne();
+    res.send("deleted successfully")
 })
 
 
