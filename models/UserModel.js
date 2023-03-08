@@ -30,7 +30,7 @@ const userScema = new mongoose.Schema({
         type: String,
         required: [true, "Please enter password"],
         minLength: [8, 'name must be at least 8 characters'],
-        // select: false,
+        select: false,
     },
     avatar: {
         public_id: {
@@ -61,6 +61,7 @@ const userScema = new mongoose.Schema({
     }
 })
 
+//hash and save password
 userScema.pre("save", async function (next) {
     if (!this.isModified("password")) {
         next()
@@ -68,10 +69,16 @@ userScema.pre("save", async function (next) {
     this.password = await bcrypt.hash(this.password, 10)
 })
 
+//create JWT token on successful register
 userScema.methods.getJWTtoken = function () {
     return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRE,
     });
+};
+
+//compare password for login
+userScema.methods.comparePassword = async function (password) {
+    return await bcrypt.compare(password, this.password);
 };
 
 
