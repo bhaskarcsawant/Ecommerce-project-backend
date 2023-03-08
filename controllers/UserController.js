@@ -1,5 +1,6 @@
 const catchAsyncError = require('../middleware/catchAsyncError')
 const User = require('../models/UserModel')
+const sendToken = require('../utils/sendToken')
 
 
 
@@ -22,10 +23,7 @@ exports.registerUser = catchAsyncError(async (req, res, next) => {
         mobile,
     });
 
-    const token = userData.getJWTtoken();
-    res.status(201).json({
-        token
-    })
+    sendToken(userData, 200, res)
 })
 
 
@@ -38,4 +36,26 @@ exports.getAllUsers = catchAsyncError(async (req, res, next) => {
             users
         })
     })
+})
+
+
+//login the user
+exports.loginUser = catchAsyncError(async (req, res, next) => {
+
+    const { email, password } = req.body
+
+    if (!email || !password) {
+        return res.send("Please enter your credentials")
+    }
+    const user = await User.findOne({ email }).select("+password")
+    if (!user) {
+        return res.send("invalid email or password")
+    }
+    const isPasswordMatched = await user.comparePassword(password)
+
+    if (!isPasswordMatched) {
+        return res.send("invalid email or password")
+    }
+
+    sendToken(user, 200, res)
 })
