@@ -46,7 +46,7 @@ const userScema = new mongoose.Schema({
     ,
     role: {
         type: String,
-        default: 'user',
+        default: 'User',
     },
     mobile: {
         type: Number,

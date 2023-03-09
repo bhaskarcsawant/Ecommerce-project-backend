@@ -10,7 +10,7 @@ exports.registerUser = catchAsyncError(async (req, res, next) => {
     if (user.length) {
         return res.send("user already registered")
     }
-    const { firstname, lastname, email, password, mobile } = req.body
+    const { firstname, lastname, email, password, mobile, role } = req.body
     const userData = await User.create({
         firstname,
         lastname,
@@ -21,6 +21,7 @@ exports.registerUser = catchAsyncError(async (req, res, next) => {
             url: "sample bro"
         },
         mobile,
+        role,
     });
 
     sendToken(userData, 200, res)
