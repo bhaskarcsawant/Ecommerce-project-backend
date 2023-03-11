@@ -44,6 +44,11 @@ const productScema = new mongoose.Schema({
         maxLength: [5, "price cannot exceed 5 characters"],
         default: 1,
     },
+    user: {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+        required: true,
+    },
     createdAt: {
         type: Date,
         default: Date.now(),

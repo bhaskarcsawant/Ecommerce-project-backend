@@ -31,6 +31,7 @@ exports.getSingleProduct = catchAsyncError(async (req, res, next) => {
 
 //to create a product
 exports.addProduct = catchAsyncError(async (req, res, next) => {
+    req.body.user = req.user.id
     await Product.create(req.body);
     res.send("inserted successfully")
 });
