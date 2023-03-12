@@ -1,5 +1,6 @@
 const catchAsyncError = require('../middleware/catchAsyncError')
 const User = require('../models/UserModel')
+const sendEmail = require('../utils/sendEmail')
 const sendToken = require('../utils/sendToken')
 
 
@@ -73,4 +74,34 @@ exports.logoutUser = catchAsyncError(async (req, res, next) => {
         success: true,
         message: "User logged out",
     })
+})
+
+//forgot password reset function
+
+exports.resetPassword = catchAsyncError(async (req, res, next) => {
+    const user = await User.findOne({ email: req.body.email })
+    if (!user) return res.send("user not found")
+
+    const resetToken = user.genrateResetPasswordToken()
+
+    await user.save({ validateBeforeSave: false })
+
+    const resetPasswordUrl = `${req.protocol}://${req.get("host")}/api/v1/password/reset/${resetToken}`;
+
+    const message = `Your password reset token :- \n\n${resetPasswordUrl} \n\nIf you have not requested reset password then please ignore it.`
+
+    try {
+        await sendEmail({
+            email: user.email,
+            subject: 'Estore password reset',
+            message,
+        })
+        return res.send("mail sent successfully")
+    }
+    catch (error) {
+        user.resetPasswordToken = undefined;
+        user.resetPasswordDate = undefined;
+        await user.save({ validateBeforeSave: false })
+        return res.send(error.message)
+    }
 })
