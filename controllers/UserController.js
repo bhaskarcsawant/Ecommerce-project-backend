@@ -2,6 +2,7 @@ const catchAsyncError = require('../middleware/catchAsyncError')
 const User = require('../models/UserModel')
 const sendEmail = require('../utils/sendEmail')
 const sendToken = require('../utils/sendToken')
+const crypto = require('crypto')
 
 
 
@@ -76,9 +77,9 @@ exports.logoutUser = catchAsyncError(async (req, res, next) => {
     })
 })
 
-//forgot password reset function
+//forgot password link send function
 
-exports.resetPassword = catchAsyncError(async (req, res, next) => {
+exports.forgotPassword = catchAsyncError(async (req, res, next) => {
     const user = await User.findOne({ email: req.body.email })
     if (!user) return res.send("user not found")
 
@@ -105,3 +106,20 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
         return res.send(error.message)
     }
 })
+
+//forgot password reset function
+
+exports.resetPassword = catchAsyncError(async (req, res, next) => {
+    const resetPasswordToken = crypto.createHash("sha256").update(req.params.token).digest("hex")
+    const user = await User.findOne({ resetPasswordToken, resetPasswordDate: { $gt: Date.now() } })
+    if (!user) return res.send("reset password token expired")
+
+    if (req.body.password !== req.body.confirmPassword) return res.send("passwords do not match")
+
+    user.password = req.body.password
+    user.resetPasswordToken = undefined;
+    user.resetPasswordDate = undefined;
+    await user.save()
+    sendToken(user, 200, res)
+})
+
