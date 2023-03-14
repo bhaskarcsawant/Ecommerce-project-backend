@@ -165,5 +165,26 @@ exports.updateProfile = catchAsyncError(async (req, res, next) => {
     res.send(user)
 })
 
+//update user role (admin)
+exports.updateUserRole = catchAsyncError(async (req, res, next) => {
+    const newUserData = {
+        role: req.body.role,
+    }
+    const user = await User.findByIdAndUpdate(req.params.id, newUserData, {
+        new: true,
+        runValidators: true,
+        useFindAndModify: false
+    })
+    res.send(user)
+})
+
+//delete user (admin)
+exports.deleteUser = catchAsyncError(async (req, res, next) => {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.send("user does not exists")
+    await user.deleteOne()
+    res.send("deleted user successfully")
+})
+
 
 
