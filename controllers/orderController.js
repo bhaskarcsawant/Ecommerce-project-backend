@@ -70,16 +70,41 @@ exports.getMyOrders = catchAsyncError(async (req, res) => {
     res.send(orders)
 })
 
+//update stock
+async function updateStock(id, quantity) {
+    const product = await Product.findById(id)
+    product.stock -= quantity
+
+    await product.save({ validateBeforeSave: false })
+}
 
 //update order status
 
 exports.updateOrderStatus = catchAsyncError(async (req, res) => {
-    const order = await Order.findByIdAndUpdate(req.params.id, { orderStatus: req.body.orderStatus }, {
-        new: true,
-        runValidators: true,
-        useFindAndModify: false
-    })
+    const order = await Order.findById(req.params.id)
     if (!order) return res.send("order not found");
 
+    if (order.orderStatus === "Delivered") {
+        return res.send("you have already delivered this order")
+    }
+
+    order.orderItems.forEach(async (order) => {
+        await updateStock(order.product, order.quantity);
+    })
+
+    order.orderStatus = req.body.orderStatus
+
+    await order.save({ validateBeforeSave: false })
+
     res.send(order)
+})
+
+
+//delete order
+
+exports.deleteOrder = catchAsyncError(async (req, res) => {
+    const order = await Order.findById(req.params.id)
+    if (!order) return res.send("order not found");
+    order.deleteOne()
+    res.send("order deleted successfully !")
 })
