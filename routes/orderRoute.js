@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.route('/order/new').post(isUserAuthenticated, newOrder)
 router.route('/orders/').get(isUserAuthenticated, isUserAdmin, getAllOrders)
-router.route('/order/:id').get(isUserAuthenticated, getSingleOrder).post(isUserAuthenticated, updateOrderStatus)
+router.route('/order/:id').get(isUserAuthenticated, getSingleOrder).put(isUserAuthenticated, isUserAdmin, updateOrderStatus)
 router.route('/orders/me/').get(isUserAuthenticated, getMyOrders)
 
 // router.route('/deleteproduct/:id').post(deleteProduct)
