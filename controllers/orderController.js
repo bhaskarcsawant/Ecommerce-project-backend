@@ -40,10 +40,15 @@ exports.newOrder = catchAsyncError(async (req, res) => {
 
 exports.getAllOrders = catchAsyncError(async (req, res) => {
     let orderCount = await Order.countDocuments()
+    let totalCost = 0;
     const orders = await Order.find()
+    orders.forEach((i) => {
+        totalCost += i.totalPrice;
+    })
     if (!orders) return res.send("order not found");
     res.status(200).json({
         orderCount,
+        totalCost,
         orders
     })
 })
@@ -63,4 +68,18 @@ exports.getMyOrders = catchAsyncError(async (req, res) => {
     const orders = await Order.find({ user: req.user._id })
     if (!orders) return res.send("orders not found");
     res.send(orders)
+})
+
+
+//update order status
+
+exports.updateOrderStatus = catchAsyncError(async (req, res) => {
+    const order = await Order.findByIdAndUpdate(req.params.id, { orderStatus: req.body.orderStatus }, {
+        new: true,
+        runValidators: true,
+        useFindAndModify: false
+    })
+    if (!order) return res.send("order not found");
+
+    res.send(order)
 })
