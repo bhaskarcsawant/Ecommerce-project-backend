@@ -36,6 +36,18 @@ exports.newOrder = catchAsyncError(async (req, res) => {
 })
 
 
+//get all orders order -- admin
+
+exports.getAllOrders = catchAsyncError(async (req, res) => {
+    let orderCount = await Order.countDocuments()
+    const orders = await Order.find()
+    if (!orders) return res.send("order not found");
+    res.status(200).json({
+        orderCount,
+        orders
+    })
+})
+
 //get single order
 
 exports.getSingleOrder = catchAsyncError(async (req, res) => {
