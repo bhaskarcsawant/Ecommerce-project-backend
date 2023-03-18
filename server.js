@@ -7,5 +7,5 @@ dotenv.config({ path: "./config/config.env" })
 //connect db to express
 connectDb()
 
-app.listen(process.env.PORT, () => console.log('server running'))
+app.listen(process.env.PORT, () => console.log('server running', process.env.PORT))
 
