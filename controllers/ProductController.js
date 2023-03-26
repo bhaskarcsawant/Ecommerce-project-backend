@@ -6,7 +6,9 @@ const ApiFeatures = require("../utils/apiFeatures")
 
 //to get all products
 exports.gelAllProducts = catchAsyncError(async (req, res, next) => {
+    // let resultPerPage = await req.query.productperpage;
     let resultPerPage = 9;
+
     let productCount = await Product.countDocuments()
     const apiFeatures = new ApiFeatures(Product.find(), req.query).search().filter().pagination(resultPerPage);
     const products = await apiFeatures.query.then(product => {
