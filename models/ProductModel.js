@@ -20,6 +20,20 @@ const productScema = new mongoose.Schema({
         type: String,
         required: [true, "Please enter product category"],
     },
+    size: [
+        {
+            stockType: {
+                type: String,
+                required: [true, "Please enter product size"],
+            },
+            quantity: {
+                type: Number,
+                required: [true, "Please enter product stock quantity"],
+                maxLength: [5, "price cannot exceed 5 characters"],
+                default: 1,
+            }
+        },
+    ],
     images: [
         {
             public_id: {
