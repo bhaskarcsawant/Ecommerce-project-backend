@@ -48,16 +48,22 @@ exports.loginUser = catchAsyncError(async (req, res, next) => {
     const { email, password } = req.body
 
     if (!email || !password) {
-        return res.send("Please enter your credentials")
+        return res.status(400).json({
+            message: "Enter your credentials"
+        })
     }
     const user = await User.findOne({ email }).select("+password")
     if (!user) {
-        return res.send("invalid email or password")
+        return res.status(400).json({
+            message: "invalid email or password"
+        })
     }
     const isPasswordMatched = await user.comparePassword(password)
 
     if (!isPasswordMatched) {
-        return res.send("invalid email or password")
+        return res.status(400).json({
+            message: "invalid email or password"
+        })
     }
 
     sendToken(user, 200, res)

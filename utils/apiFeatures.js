@@ -2,7 +2,7 @@ class ApiFeatures {
     constructor(query, queryStr) {
         this.query = query;
         this.queryStr = queryStr;
-        console.log(query)
+        // console.log(query)
     }
     search() {
         const keyword = this.queryStr.keyword ? {
@@ -22,6 +22,8 @@ class ApiFeatures {
         //filter for category
         const removeFields = ['keyword', 'page', 'limit'];
         removeFields.forEach(key => delete queryCopy[key]);
+
+
 
         //filter for price
         let queryStr = JSON.stringify(queryCopy);
