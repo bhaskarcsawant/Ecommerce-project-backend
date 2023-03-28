@@ -33,18 +33,6 @@ const userScema = new mongoose.Schema({
         minLength: [8, 'name must be at least 8 characters'],
         select: false,
     },
-    avatar: {
-        public_id: {
-            type: String,
-            required: true,
-        },
-        url: {
-            type: String,
-            required: true,
-        },
-
-    }
-    ,
     role: {
         type: String,
         default: 'User',
