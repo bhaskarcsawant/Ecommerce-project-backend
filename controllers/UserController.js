@@ -10,7 +10,9 @@ const crypto = require('crypto')
 exports.registerUser = catchAsyncError(async (req, res, next) => {
     const user = await User.find({ email: req.body.email })
     if (user.length) {
-        return res.send("user already registered")
+        return res.status(400).json({
+            message: "User already exists",
+        })
     }
     const { firstname, lastname, email, password, mobile, role } = req.body
     const userData = await User.create({
