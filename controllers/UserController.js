@@ -85,7 +85,9 @@ exports.logoutUser = catchAsyncError(async (req, res, next) => {
 
 exports.forgotPassword = catchAsyncError(async (req, res, next) => {
     const user = await User.findOne({ email: req.body.email })
-    if (!user) return res.send("user not found")
+    if (!user) return res.status(400).json({
+        message: "user not found"
+    })
 
     const resetToken = user.genrateResetPasswordToken()
 
@@ -101,13 +103,17 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
             subject: 'Estore password reset',
             message,
         })
-        return res.send("mail sent successfully")
+        return res.status(200).json({
+            message: "mail sent successfully"
+        })
     }
     catch (error) {
         user.resetPasswordToken = undefined;
         user.resetPasswordDate = undefined;
         await user.save({ validateBeforeSave: false })
-        return res.send(error.message)
+        return resstatus(400).json({
+            message: error.message
+        })
     }
 })
 
