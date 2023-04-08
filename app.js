@@ -3,6 +3,8 @@ const app = express();
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const fileupload = require('express-fileupload');
+const dotenv = require("dotenv");
+dotenv.config({ path: "./config/config.env" });
 
 app.use(express.json())
 app.use(cookieParser())
@@ -13,9 +15,11 @@ app.use(fileupload())
 const product = require("./routes/ProductRoute")
 const user = require("./routes/UserRoute")
 const order = require("./routes/orderRoute")
+const payments = require("./routes/PaymentsRoute")
 
 app.use("/api/v1", product)
 app.use("/api/v1", user)
 app.use("/api/v1", order)
+app.use("/api/v1", payments);
 
 module.exports = app
