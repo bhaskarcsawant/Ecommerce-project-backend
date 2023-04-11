@@ -17,22 +17,24 @@ exports.newOrder = catchAsyncError(async (req, res) => {
         orderStatus,
     } = req.body;
 
-    const order = await Order.create(
-        {
-            shippingInfo,
-            orderItems,
-            paymentInfo,
-            itemsPrice,
-            taxPrice,
-            shippingPrice,
-            totalPrice,
-            orderStatus,
-            paidAt: Date.now(),
-            user: req.user._id
-        }
-    );
+    try {
+            const order = await Order.create({
+              shippingInfo,
+              orderItems,
+              paymentInfo,
+              itemsPrice,
+              taxPrice,
+              shippingPrice,
+              totalPrice,
+              orderStatus,
+              paidAt: Date.now(),
+              user: req.user._id,
+            });
+         res.send(order);
+    } catch (error) {
+        res.status(400).json({ error: error.message})
+    }
 
-    res.send(order)
 })
 
 
@@ -74,8 +76,8 @@ exports.getMyOrders = catchAsyncError(async (req, res) => {
 async function updateStock(id, quantity) {
     const product = await Product.findById(id)
     product.stock -= quantity
-    // console.log(product.size)
-    product.size[0].quantity -= quantity
+    // // console.log(product.size)
+    // product.size[0].quantity -= quantity
 
     await product.save({ validateBeforeSave: false })
 }
