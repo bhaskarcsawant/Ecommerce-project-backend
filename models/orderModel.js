@@ -11,10 +11,6 @@ const orderScema = new mongoose.Schema({
             type: String,
             required: true
         },
-        district: {
-            type: String,
-            required: true
-        },
         contry: {
             type: String,
             required: true
@@ -42,18 +38,6 @@ const orderScema = new mongoose.Schema({
                 type: Number,
                 required: true
             },
-            size: [
-                {
-                    sizeType: {
-                        type: String,
-                        required: true
-                    },
-                    quantity: {
-                        type: Number,
-                        required: true
-                    },
-                }
-            ],
             price: {
                 type: Number,
                 required: true
