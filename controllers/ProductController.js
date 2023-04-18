@@ -19,6 +19,20 @@ exports.gelAllProducts = catchAsyncError(async (req, res, next) => {
     })
 })
 
+//to get all products
+exports.gelAllAdminProducts = catchAsyncError(async (req, res, next) => {
+    // let resultPerPage = await req.query.productperpage;
+
+    let productCount = await Product.countDocuments()
+    const products = await Product.find()
+  
+    res.status(200).json({
+        productCount,
+        products
+    })
+
+})
+
 
 //to get single product
 exports.getSingleProduct = catchAsyncError(async (req, res, next) => {
