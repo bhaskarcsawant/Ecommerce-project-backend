@@ -2,6 +2,7 @@
 const Product = require("../models/ProductModel")
 const catchAsyncError = require('../middleware/catchAsyncError')
 const ApiFeatures = require("../utils/apiFeatures")
+const cloudinary = require("cloudinary");
 
 
 //to get all products
@@ -47,6 +48,21 @@ exports.getSingleProduct = catchAsyncError(async (req, res, next) => {
 
 //to create a product
 exports.addProduct = catchAsyncError(async (req, res, next) => {
+    const imagesLinks = [];
+
+    for (let i = 0; i < req.body.images.length; i++) {
+        console.log(req.body.images);
+        const result = await cloudinary.v2.uploader.upload(req.body.images[i], {
+            folder: "products",
+        });
+
+        imagesLinks.push({
+            public_id: result.public_id,
+            url: result.secure_url,
+        });
+    }
+
+    req.body.images = imagesLinks;
     req.body.user = req.user.id
     await Product.create(req.body);
     res.send("inserted successfully")
