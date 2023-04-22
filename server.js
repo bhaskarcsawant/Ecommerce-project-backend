@@ -1,9 +1,10 @@
 // const express = require("express");
 const app = require("./app")
-const dotenv = require("dotenv")
 const connectDb = require('./config/databse')
 const cloudinary = require("cloudinary")
-dotenv.config({ path: "./config/config.env" })
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config({ path: "./config/config.env" })
+}
 
 //connect db to express
 connectDb()

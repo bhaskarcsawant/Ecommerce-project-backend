@@ -3,8 +3,9 @@ const app = express();
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const fileupload = require('express-fileupload');
-const dotenv = require("dotenv");
-dotenv.config({ path: "./config/config.env" });
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config({ path: "./config/config.env" });
+}
 
 // app.use(express.json())
 app.use(cookieParser())
