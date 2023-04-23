@@ -10,8 +10,8 @@ if (process.env.NODE_ENV !== "production") {
 app.use(
   cors({
     origin: [
-      "https://ecommerce-project-frontend.vercel.app/",
-      "https://ecommerce-project-frontend.vercel.app/",
+      "https://ecommerce-project-frontend.vercel.app",
+      "https://ecommerce-project-frontend.vercel.app",
     ],
     credentials: true,
   })
@@ -20,7 +20,7 @@ app.use(
 app.use(function (req, res, next) {
   res.header(
     "Access-Control-Allow-Origin",
-    "https://ecommerce-project-frontend.vercel.app/"
+    "https://ecommerce-project-frontend.vercel.app"
   );
   res.header("Access-Control-Allow-Headers", true);
 res.header("Access-Control-Allow-Credentials", true);
