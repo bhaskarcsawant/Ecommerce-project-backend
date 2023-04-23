@@ -9,7 +9,10 @@ if (process.env.NODE_ENV !== "production") {
 }
 app.use(
   cors({
-    origin: ["https://ecommerce-project-frontend.vercel.app/", "http://localhost:3000"],
+    origin: [
+      "https://ecommerce-project-frontend.vercel.app/",
+      "https://ecommerce-project-frontend.vercel.app/",
+    ],
     credentials: true,
   })
 );
