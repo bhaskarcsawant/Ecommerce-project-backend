@@ -11,6 +11,7 @@ const sendToken = (user, statuscode, res) => {
       httpOnly: true,
       sameSite: "None",
       secure: true,
+      domain: ".https://ecommerce-project-frontend.vercel.app/",
     };
     res.status(statuscode).cookie("token", token, options).json({
         success: true,
