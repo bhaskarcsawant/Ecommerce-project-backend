@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const UserModel = require("../models/UserModel");
 import Cookies from "universal-cookie";
 
-const cookies = new Cookies(req.headers.cookie);
+const cookies = new Cookies(req.cookie);
 
 
 
