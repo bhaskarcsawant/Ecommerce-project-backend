@@ -5,7 +5,7 @@ const { isUserAuthenticated, isUserAdmin } = require('../middleware/auth');
 const router = express.Router();
 
 router.route('/users').get(isUserAdmin, getAllUsers)
-router.route('/me/').get(isUserAuthenticated, getUserDetails)
+router.route('/me/').get(getUserDetails)
 router.route('/admin/user/:id').get(isUserAdmin, getUserDetailsAdmin).delete(isUserAdmin, deleteUser)
 router.route('/me/update/').put(isUserAuthenticated, updateProfile)
 router.route('/admin/user/update/role/:id').put(isUserAdmin, updateUserRole)
