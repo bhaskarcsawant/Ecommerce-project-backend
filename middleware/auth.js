@@ -1,10 +1,15 @@
 const catchAsyncError = require("./catchAsyncError");
 const jwt = require('jsonwebtoken');
 const UserModel = require("../models/UserModel");
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies(req.headers.cookie);
+
+
 
 
 exports.isUserAuthenticated = catchAsyncError(async (req, res, next) => {
-    const { token } = req.cookies;
+    const token = cookies.get("token");
     if (!token) {
         return res.status(401).json({
             success: false,
@@ -18,7 +23,7 @@ exports.isUserAuthenticated = catchAsyncError(async (req, res, next) => {
     next()
 })
 exports.isUserAdmin = catchAsyncError(async (req, res, next) => {
-    const { token } = req.cookies;
+   const token = cookies.get("token");
     if (!token) {
         return res.status(401).json({
             success: false,
