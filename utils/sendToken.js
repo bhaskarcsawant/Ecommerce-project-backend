@@ -8,10 +8,9 @@ const sendToken = (user, statuscode, res) => {
       expires: new Date(
         Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000
       ),
-      httpOnly: true,
-      sameSite: "None",
+      httpOnly: false,
+      sameSite: "none",
       secure: true,
-      domain: ".https://ecommerce-project-frontend.vercel.app/",
     };
     res.status(statuscode).cookie("token", token, options).json({
         success: true,
